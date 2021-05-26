@@ -12,16 +12,19 @@
 #define backward 24
 using namespace std;
 
+void* updateSpeed();
+
 class Motor
 {
 public:
     Motor(PID* p1);
-	void updateSpeed();
     void startMotor(int direction);
     void stopMotor(int direction);
     void setDirection();
 private:
+    static void* updateSpeed(void* arg);
     int pwmValue_ = 0;
-    int direction_ = 0;
+    static int direction_;
     PID* p1_;
+    pthread_t motorThread;
 };

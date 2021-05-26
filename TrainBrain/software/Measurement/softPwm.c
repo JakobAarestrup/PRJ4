@@ -139,7 +139,7 @@ int softPwmCreate (int pin, int initialValue, int pwmRange)
   if (pwmRange <= 0)
     return -1 ;
 
-  passPin = malloc (sizeof (*passPin)) ;
+  passPin = (int*)malloc (sizeof (*passPin)) ;
   if (passPin == NULL)
     return -1 ;
 

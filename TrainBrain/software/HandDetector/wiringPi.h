@@ -55,15 +55,15 @@
 
 // Pin modes
 
-#define	INPUT			     0
-#define	OUTPUT			   1
+#define	INPUT			 0
+#define	OUTPUT			 1
 #define	PWM_OUTPUT		 2
 #define	GPIO_CLOCK		 3
 #define	SOFT_PWM_OUTPUT		 4
 #define	SOFT_TONE_OUTPUT	 5
 #define	PWM_TONE_OUTPUT		 6
 
-#define	LOW			   0
+#define	LOW			 0
 #define	HIGH			 1
 
 // Pull up/down/none
@@ -74,7 +74,7 @@
 
 // PWM
 
-#define	PWM_MODE_MS		  0
+#define	PWM_MODE_MS		0
 #define	PWM_MODE_BAL		1
 
 // Interrupt levels
@@ -82,36 +82,36 @@
 #define	INT_EDGE_SETUP		0
 #define	INT_EDGE_FALLING	1
 #define	INT_EDGE_RISING		2
-#define	INT_EDGE_BOTH		  3
+#define	INT_EDGE_BOTH		3
 
 // Pi model types and version numbers
 //	Intended for the GPIO program Use at your own risk.
 
-#define	PI_MODEL_A		   0
-#define	PI_MODEL_B		   1
-#define	PI_MODEL_AP		   2
-#define	PI_MODEL_BP	  	 3
-#define	PI_MODEL_2	  	 4
-#define	PI_ALPHA		     5
-#define	PI_MODEL_CM		   6
-#define	PI_MODEL_07		   7
-#define	PI_MODEL_3B		   8
+#define	PI_MODEL_A		 0
+#define	PI_MODEL_B		 1
+#define	PI_MODEL_AP		 2
+#define	PI_MODEL_BP		 3
+#define	PI_MODEL_2		 4
+#define	PI_ALPHA		 5
+#define	PI_MODEL_CM		 6
+#define	PI_MODEL_07		 7
+#define	PI_MODEL_3B		 8
 #define	PI_MODEL_ZERO		 9
 #define	PI_MODEL_CM3		10
-#define	PI_MODEL_ZERO_W	12
+#define	PI_MODEL_ZERO_W		12
 #define	PI_MODEL_3BP 		13
 #define	PI_MODEL_3AP 		14
-#define	PI_MODEL_CM3P 	16
+#define	PI_MODEL_CM3P 		16
 #define	PI_MODEL_4B 		17
 #define	PI_MODEL_400		19
 #define	PI_MODEL_CM4		20
 
 #define	PI_VERSION_1		0
-#define	PI_VERSION_1_1	1
-#define	PI_VERSION_1_2	2
+#define	PI_VERSION_1_1		1
+#define	PI_VERSION_1_2		2
 #define	PI_VERSION_2		3
 
-#define	PI_MAKER_SONY		  0
+#define	PI_MAKER_SONY		0
 #define	PI_MAKER_EGOMAN		1
 #define	PI_MAKER_EMBEST		2
 #define	PI_MAKER_UNKNOWN	3

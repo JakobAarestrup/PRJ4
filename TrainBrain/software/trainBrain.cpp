@@ -2,8 +2,9 @@
 #include "Measurement/Measurement.h"
 #include "Motor/Motor.h"
 #include "Motor/PID.h"
-#include "TableDetector/QrCode.hpp"
 #include "Somo/somo.h"
+//#include "TableDetector/QrCode.hpp"
+#include "BossBoundary/bossBoundary.h"
 #include <pthread.h>
 
 using namespace std;
@@ -18,22 +19,26 @@ enum programState
   deliverOrder
 };
 
-void programStateSwitch(programState pstate);
+void programStateSwitch(programState &state);
 
 pthread_t *PIDThread;
-pthread_t *PIDThread2;
+pthread_t *PIDMThread;
 pthread_t *QrThread;
+
+somo *  s1     = new somo();
+PID *   p1     = new PID();
+PIDInfo* pInfo =  new PIDInfo();
+Motor * m1     = new Motor(p1);
+// QrCode        q1        = QrCode();
+handDetector *h1        = new handDetector();
+Measurement * mInfo     = new Measurement();
+string        tableNo   = "1";
+int           direction = forward;
+BossBoundary *boss      = new BossBoundary();
 
 int main()
 {
-  programState  state     = receiveOrder;
-  somo *        s1        = new somo();
-  PID *         p1        = new PID();
-  PIDInfo       p1Info    = PIDInfo();
-  Motor *       m1        = new Motor(p1);
-  QrCode        q1        = QrCode();
-  handDetector *h1        = new handDetector();
-  int           direction = forward;
+  programState state = receiveOrder;
 
   // Initialization and prep for loop
   s1->initSomo();
@@ -47,52 +52,48 @@ int main()
                               // al data der skal gå mellem funktion og main
 
   // Thread for measurements for PID controller
-  pthread_create(PIDThread2, NULL, PIDMeasurement, (void *)p1);
+  pthread_create(PIDMThread, NULL, PIDMeasurement, (void *)mInfo->getInfo());
 
   // Thread for QR detector
-  pthread_create(QrThread, NULL, QrCode_thread, NULL);
-
+  // pthread_create(QrThread, NULL, QrCode_thread, (void*)boss.tableNo);
   for (;;)
   {
     programStateSwitch(state);
   }
 }
 
-void programStateSwitch(programState state)
+void programStateSwitch(programState &state)
 {
   switch (state)
   {
   case receiveOrder:
   {
-    // receiveOrder();
-    // direction = 0;
-    state = startMotor;
+    tableNo   = boss->receive();
+    direction = forward;
+    state     = startMotor;
   }
   break;
 
   case startMotor:
   {
     m1->startMotor(direction);
-    // PIDThread.start(m1->updateSpeed());
-    state = detectQRCode;
+    pInfo->calcFlag = 1;
+    state           = detectQRCode;
   }
   break;
 
   case stopMotor:
   {
-    // m1->stopMotor();
-    state = detectQRCode;
+    m1->stopMotor(direction);
+    pInfo->calcFlag = 0;
+    if (direction = forward) state = deliverOrder; else state = receiveOrder;
   }
   break;
 
   case detectQRCode:
   {
-    /* detectQRCode(); 
-    Skal sende parameter ind for at vide hvilken QR kode den skal stoppe ved*/
-    if (direction == forward)
-      state = stopMotor;
-    else
-      state = detectHand;
+    //QrCode_thread();
+    state = stopMotor;
   }
   break;
 
@@ -100,15 +101,14 @@ void programStateSwitch(programState state)
   {
     h1->detectHand();
     direction = backward;
+    tableNo   = "0";
     state     = startMotor;
   }
   break;
 
   case deliverOrder:
   {
-
     s1->playSound(); // Afspiller lyd
-    s1->closeSomo();
     state = detectHand;
   }
   break;

@@ -11,16 +11,6 @@ PID::PID()
   pInfo.out             = 0.0f;
 };
 
-/*void PID::PIDController_Init()
-{
-  // Clear controller variables
-  pInfo.integrator      = 0.0f;
-  pInfo.prevError       = 0.0f;
-  pInfo.differentiator  = 0.0f;
-  pInfo.prevMeasurement = 0.0f;
-  pInfo.out             = 0.0f;
-};*/
-
 float PID::getOut() { return pInfo.out; };
 
 PIDInfo *PID::getInfo() { return &pInfo; }

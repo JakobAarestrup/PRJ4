@@ -2,15 +2,32 @@
 
 Measurement::Measurement()
 {
-  gpioSetMode(HALL, PI_INPUT);
-  gpioSetPullUpDown(HALL, PI_PUD_UP);
+  mInfo       = new PIDM();
+  mInfo->pi = pigpio_start(0, 0);
+  pulse_width = 0;
+  rise_tick   = 0;
+
+  gpioSetMode(mInfo->HALL, PI_INPUT);
+  gpioSetPullUpDown(mInfo->HALL, PI_PUD_UP);
+};
+
+void *PIDMeasurement(void *arg)
+{
+  PIDM *mInfo = (PIDM *)arg;
+
+  // Set up callback for PWM input
+  callback(mInfo->pi, mInfo->HALL, EITHER_EDGE, MeasureCallback);
+
+  while (true)
+  {
+    printf("PWM pulse width: %u\n",pulse_width);
+    usleep(500000);
+  }
 };
 
 // Callback function for measuring PWM input
-void PIDMeasurement(int pi, unsigned user_gpio, unsigned level, uint32_t tick)
+void MeasureCallback(int pi, unsigned HALL, unsigned level, uint32_t tick)
 {
-  rise_tick = 0;   // Pulse rise time tick value
-  pulse_width = 0; // Last measured pulse width (us)
   if (level == 1)
   { // rising edge
     rise_tick = tick;
@@ -19,4 +36,14 @@ void PIDMeasurement(int pi, unsigned user_gpio, unsigned level, uint32_t tick)
   {                                 // falling edge
     pulse_width = tick - rise_tick; // TODO: Handle 72 min wrap-around
   }
+};
+
+uint32_t Measurement::getPWM()
+{
+  return pulse_width;
+}
+
+PIDM *Measurement::getInfo()
+{
+  return mInfo;
 };

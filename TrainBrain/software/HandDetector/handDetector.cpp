@@ -1,5 +1,4 @@
 #include "handDetector.h"
-#include <wiringPi.h>
 
 handDetector::handDetector()
 {
