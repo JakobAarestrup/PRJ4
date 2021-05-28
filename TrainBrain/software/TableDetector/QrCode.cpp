@@ -5,18 +5,12 @@ using namespace std;
 using namespace zbar;
 
 ImageScanner scanner;
+raspicam::RaspiCam_Cv Camera;
 
 string QrCode_thread(void *arg)
 {
   string *tableNo = (string *)arg;
-  // Capture camera
-  VideoCapture cap;
-  // brug noget andet end 0, hvis default ikke skal bruges
-  if (!cap.open(0))
-  {
-    cout << "Intet kamera fundet" << endl;
-    return 0;
-  }
+  string data;
   // Configurer scanner til at have rigtige opløsning og fps, samt indstillinger
   // for Zbars Qr scanner
   scanner.set_config(zbar::ZBAR_NONE, zbar::ZBAR_CFG_ENABLE, 0);
@@ -28,7 +22,7 @@ string QrCode_thread(void *arg)
   // opretter forbindelse til kamera
   Camera.open();
 
-  while (data != *tableNo)
+  for (;;)
   {
     // Sætter billederne fra kameraet ind i en variable
     Mat frame;
@@ -52,13 +46,24 @@ string QrCode_thread(void *arg)
     {
       data = symbol->get_data();
     }
-  }
 
+    // tjekker Qr koden faktisk indeholdte det ønskede data
+    if(data == *tableNo)
+    {
+      break;
+    }
+
+    //// Viser video fra kameraet på GUI, skal ikke tilføjes medmindre koden skal debugges
+    imshow("this is you, smile! :)", frame);
+
+    //// Stopper med at optage ved at trykke ESC, skal også kun tilføjes ved debugging
+    if( waitKey(10) == 27 ) break; 
+  }
   // Frigiver kameraet sådan at det ikke fejler ved næste søgning
   Camera.release();
 
   return data;
 }
 
-// meget vigitg at du compiler den sådan her:
-// g++ QrCode.cpp -o QrCode `pkg-config --cflags --libs opencv`
+// meget vigtigt at du compiler den sådan her:
+// g++ main.cpp QrCode.cpp -o test `pkg-config --cflags --libs opencv zbar` -I/usr/local/include/ -lraspicam -lraspicam_c
