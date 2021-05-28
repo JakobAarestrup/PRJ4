@@ -17,24 +17,18 @@ void *PIDMeasurement(void *arg)
 
   // Set up callback for PWM input
   callback(mInfo->pi, mInfo->HALL, EITHER_EDGE, MeasureCallback);
-
-  while (true)
-  {
-    printf("PWM pulse width: %u\n",pulse_width);
-    usleep(500000);
-  }
 };
 
 // Callback function for measuring PWM input
 void MeasureCallback(int pi, unsigned HALL, unsigned level, uint32_t tick)
 {
-  if (level == 1)
-  { // rising edge
+  if (level == 1) // rising edge
+  { 
     rise_tick = tick;
   }
-  else if (level == 0)
-  {                                 // falling edge
-    pulse_width = tick - rise_tick; // TODO: Handle 72 min wrap-around
+  else if (level == 0) // falling edge
+  {                                 
+    pulse_width = tick - rise_tick;
   }
 };
 
