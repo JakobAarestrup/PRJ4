@@ -5,12 +5,14 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include "softPwm.h"
+#include "../Measurement/Measurement.h"
 
 using namespace std;
 
 struct PIDInfo
 {
 	bool calcFlag = true;
+	Measurement* m;
 
 	float out = 0.0f;
     float setpoint; 
@@ -39,6 +41,15 @@ struct PIDInfo
 	float prevError = 0.0f;			//Required for integrator
 	float differentiator = 0.0f;
 	float prevMeasurement = 0.0f;	//Required for differentiator
+
+	void setMeasurement(Measurement* MP)
+	{
+		m = MP;
+	};
+	float getMeasurement()
+	{
+		return m->getPWM();
+	};
 };
 
 void* PIDController_Update_thread(void* pInfo);
@@ -46,11 +57,10 @@ void* PIDController_Update_thread(void* pInfo);
 class PID
 {
 public:
-	PID();
+	PID(Measurement* MP);
     void  PIDController_Init();
     //void PIDController_Update(float setpoint, float measurement);
     float getOut();
-	void setMeasurement(float measurement);
 	void setSetPoint(float setPoint);
 	PIDInfo* getInfo();
 private:

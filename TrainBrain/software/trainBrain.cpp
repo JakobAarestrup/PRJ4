@@ -3,7 +3,7 @@
 #include "Motor/Motor.h"
 #include "Motor/PID.h"
 #include "Somo/somo.h"
-//#include "TableDetector/QrCode.hpp"
+#include "TableDetector/QrCode.hpp"
 #include "BossBoundary/bossBoundary.h"
 #include <pthread.h>
 
@@ -25,13 +25,14 @@ pthread_t *PIDThread;
 pthread_t *PIDMThread;
 pthread_t *QrThread;
 
-somo *  s1     = new somo();
-PID *   p1     = new PID();
-PIDInfo* pInfo =  new PIDInfo();
-Motor * m1     = new Motor(p1);
-// QrCode        q1        = QrCode();
-handDetector *h1        = new handDetector();
-Measurement * mInfo     = new Measurement();
+somo *       s1    = new somo();
+Measurement *mInfo = new Measurement();
+PID *        p1    = new PID(mInfo);
+PIDInfo *    pInfo = new PIDInfo();
+Motor *      m1    = new Motor(p1);
+QrCode        q1        = QrCode();
+handDetector *h1 = new handDetector();
+
 string        tableNo   = "1";
 int           direction = forward;
 BossBoundary *boss      = new BossBoundary();
@@ -55,7 +56,7 @@ int main()
   pthread_create(PIDMThread, NULL, PIDMeasurement, (void *)mInfo->getInfo());
 
   // Thread for QR detector
-  // pthread_create(QrThread, NULL, QrCode_thread, (void*)boss.tableNo);
+  pthread_create(QrThread, NULL, QrCode_thread, (void*)boss.tableNo);
   for (;;)
   {
     programStateSwitch(state);
@@ -86,13 +87,16 @@ void programStateSwitch(programState &state)
   {
     m1->stopMotor(direction);
     pInfo->calcFlag = 0;
-    if (direction = forward) state = deliverOrder; else state = receiveOrder;
+    if (direction = forward)
+      state = deliverOrder;
+    else
+      state = receiveOrder;
   }
   break;
 
   case detectQRCode:
   {
-    //QrCode_thread();
+    QrCode_thread();
     state = stopMotor;
   }
   break;

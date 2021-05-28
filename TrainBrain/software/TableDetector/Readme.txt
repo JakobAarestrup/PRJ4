@@ -1,13 +1,7 @@
-Før denne kode virker, skal du downloade et biblotek med: 
+"opencv_all" og "zbar-0.10" mapperne skal ligge sammen med koden, når man compiler skal man bruge ekstra parameter:
 
-1. Sudo apt-get install libboost1.67-all
-
-Udover dette skal "opencv_all" mappen ligge sammen med koden, når man compiler skal man bruge ekstra parameter:
-
-`pkg-config --cflags --libs opencv`
+`pkg-config --cflags --libs opencv zbar` -lraspicam -lraspicam_cv
 
 En fuld compilering af koden ville se sådan her ud:
 
-g++ main.cpp QrCode.cpp -o QrCode `pkg-config --cflags --libs opencv`
-
-En sidste ting er at QrCoden SKAL kun indeholde tal, ellers fejler koden. Dette skyldes at vi laver dataen i Qr-koden om til integer og returnere det.  
+g++ main.cpp QrCode.cpp -o test `pkg-config --cflags --libs opencv zbar` -I/usr/local/include/ -lraspicam -lraspicam_cv
