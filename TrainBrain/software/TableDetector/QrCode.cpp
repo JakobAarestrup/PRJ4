@@ -52,18 +52,6 @@ string QrCode_thread(void *arg)
     {
       data = symbol->get_data();
     }
-
-    // tjekker Qr koden faktisk indeholdte noget data
-    if(data.length()>0)
-    {
-      break;
-    }
-
-    //// Viser video fra kameraet på GUI, skal ikke tilføjes medmindre koden skal debugges
-    //imshow("this is you, smile! :)", frame);
-
-    //// Stopper med at optage ved at trykke ESC, skal også kun tilføjes ved debugging
-    //if( waitKey(10) == 27 ) break; 
   }
 
   // Frigiver kameraet sådan at det ikke fejler ved næste søgning
