@@ -8,6 +8,7 @@
 
 static uint32_t rise_tick;   // Pulse rise time tick value
 static uint32_t pulse_width; // Last measured pulse width (us)
+static uint32_t rpm;
 
 struct PIDM
 {
@@ -22,7 +23,8 @@ class Measurement
 {
 public:
   Measurement();
-  uint32_t getPWM();
+  uint32_t getRPM();
   PIDM *getInfo();
   PIDM *mInfo;
+
 };

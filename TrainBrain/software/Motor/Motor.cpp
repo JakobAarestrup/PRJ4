@@ -7,8 +7,8 @@ void *Motor::updateSpeed(void *arg)
   PID *p1 = (PID *)arg;
   for (;;)
   {
-    pwmWrite(direction_, p1->getOut());
-    usleep(500);
+    pwmWrite(direction_, (p1->getOut())*1024);
+    usleep(10000);
   }
 };
 

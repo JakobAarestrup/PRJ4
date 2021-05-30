@@ -15,12 +15,12 @@ struct PIDInfo
 	Measurement* m;
 
 	float out = 0.0f;
-    float setpoint; 
+    float setpoint = 360; 
     float measurement;
 	//Controller gains
-	float Kp = 2.0f;
-	float Ki = 0.5f;
-	float Kd = 0.25f;
+	float Kp = 1.47f;
+	float Ki = 12.8f;
+	float Kd = 0.0425f;
 
 	//Derivative low-pass filter time constant
 	float tau = 0.25f;
@@ -48,7 +48,7 @@ struct PIDInfo
 	};
 	float getMeasurement()
 	{
-		return m->getPWM();
+		return m->getRPM();
 	};
 };
 

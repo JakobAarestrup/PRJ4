@@ -6,6 +6,7 @@ Measurement::Measurement()
   mInfo->pi = pigpio_start(0, 0);
   pulse_width = 0;
   rise_tick   = 0;
+  rpm = 0;
 
   gpioSetMode(mInfo->HALL, PI_INPUT);
   gpioSetPullUpDown(mInfo->HALL, PI_PUD_UP);
@@ -29,12 +30,13 @@ void MeasureCallback(int pi, unsigned HALL, unsigned level, uint32_t tick)
   else if (level == 0) // falling edge
   {                                 
     pulse_width = tick - rise_tick;
+    rpm = (1/pulse_width)*60;
   }
 };
 
-uint32_t Measurement::getPWM()
+uint32_t Measurement::getRPM()
 {
-  return pulse_width;
+  return rpm;
 }
 
 PIDM *Measurement::getInfo()
