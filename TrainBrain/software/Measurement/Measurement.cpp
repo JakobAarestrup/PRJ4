@@ -9,7 +9,6 @@ Measurement::Measurement()
   rpm = 0;
 
   gpioSetMode(mInfo->HALL, PI_INPUT);
-  gpioSetPullUpDown(mInfo->HALL, PI_PUD_UP);
 };
 
 void *PIDMeasurement(void *arg)
