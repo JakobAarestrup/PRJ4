@@ -9,18 +9,18 @@
 
 using namespace std;
 
-struct PIDInfo
+struct PIDInfo // Struct hvor der saettes vaerdier til udregning af PID
 {
 	bool calcFlag = true;
 	Measurement* m;
 
 	float out = 0.0f;
-    float setpoint = 360; 
-    float measurement;
+    float setpoint = 360; // Det oenskede RPM for motor
+    float measurement; // Maalt RPM
 	//Controller gains
-	float Kp = 1.47f;
-	float Ki = 12.8f;
-	float Kd = 0.0425f;
+	float Kp = 1.47f; // Vores udregnede Kp vaerdi
+	float Ki = 12.8f; // Vores udregnede Ki vaerdi
+	float Kd = 0.0425f; // Vores udregnede Kd vaerdi
 
 	//Derivative low-pass filter time constant
 	float tau = 0.25f;
@@ -42,11 +42,11 @@ struct PIDInfo
 	float differentiator = 0.0f;
 	float prevMeasurement = 0.0f;	//Required for differentiator
 
-	void setMeasurement(Measurement* MP)
+	void setMeasurement(Measurement* MP) //Saetter m = Measurement pointer
 	{
 		m = MP;
 	};
-	float getMeasurement()
+	float getMeasurement() //returnerer RPM fra m objekt
 	{
 		return m->getRPM();
 	};

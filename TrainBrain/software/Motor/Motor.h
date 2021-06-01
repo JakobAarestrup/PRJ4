@@ -4,8 +4,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include "PID.h"
-#include "softPwm.h"
-#include "wiringPi.h"
+#include "softPwm.h" //Bibliotek til at lave PWM signal
+#include "wiringPi.h" //Bibliotek til GPIO opsaetning
 
 //#define	PIFACE_BASE	200
 #define forward	1 //PWM-pinc
@@ -25,6 +25,6 @@ private:
     static void* updateSpeed(void* arg);
     int pwmValue_ = 0;
     static int direction_;
-    PID* p1_;
+    PID* p1_; // Objekt fra PID
     pthread_t motorThread;
 };

@@ -2,24 +2,24 @@
 
 Measurement::Measurement()
 {
-  mInfo       = new PIDM();
-  mInfo->pi = pigpio_start(0, 0);
+  mInfo       = new PIDM(); //Measurement Objekt til at indeholde Measurement data
+  mInfo->pi = pigpio_start(0, 0); //Forbinder til pigpio daemon
   pulse_width = 0;
   rise_tick   = 0;
   rpm = 0;
 
-  gpioSetMode(mInfo->HALL, PI_INPUT);
+  gpioSetMode(mInfo->HALL, PI_INPUT); //Saetter Hall som input GPIO
 };
 
 void *PIDMeasurement(void *arg)
 {
   PIDM *mInfo = (PIDM *)arg;
 
-  // Set up callback for PWM input
+  // Opsaetning af callback til PWM input
   callback(mInfo->pi, mInfo->HALL, EITHER_EDGE, MeasureCallback);
 };
 
-// Callback function for measuring PWM input
+// Callback funktion til at maale PWM input
 void MeasureCallback(int pi, unsigned HALL, unsigned level, uint32_t tick)
 {
   if (level == 1) // rising edge
@@ -32,12 +32,12 @@ void MeasureCallback(int pi, unsigned HALL, unsigned level, uint32_t tick)
     rpm = (1/pulse_width)*60;
   }
 };
-
+// Returnerr RPM
 uint32_t Measurement::getRPM()
 {
   return rpm;
 }
-
+// Returnerer Measurement objektet
 PIDM *Measurement::getInfo()
 {
   return mInfo;

@@ -4,18 +4,18 @@
 #include <termios.h>		// Bibliotek der bruges af wiringSerial.h
 using namespace std;
 
-void somo::initSomo()
+void somo::initSomo() // Starter somo UART forbindelse
 {
     cout << "\ninitializing serial connection to SOMO\n";
     fd = serialOpen("/dev/ttyS0", 9600); // Aabner serial forbindelse til SOMO-II
 }
-void somo::closeSomo()
+void somo::closeSomo()// Lukker somo UART forbindelse til SOMO-II
 {
     cout << "closing serial connection to SOMO\n";
-    serialClose(fd); // Lukker serial forbindelse til SOMO-II
+    serialClose(fd); // Lukker serial forbindelse 
 }
 
-void somo::playSound()
+void somo::playSound() // Funktion til at afspille lyd
 {
     cout << "Sending play command to SOMO\n";
     const char valStart1[] = {0x7E,0x0D,0x01}; // Start command, command code, feedback bit.
@@ -30,7 +30,7 @@ void somo::playSound()
     serialPuts(fd,valStart2); // Anden del af kommando bliver sendt
 }
 
-void somo::stopSound()
+void somo::stopSound() // Funktion til at stoppe afspilning af lyd
 {
     cout << "Sending stop command to SOMO\n";
     const char valStop1[] = {0x7E,0x16,0x01}; // Start command, command code, feedback bit.

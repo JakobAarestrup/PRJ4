@@ -9,7 +9,7 @@
 
 using namespace std;
 
-enum programState
+enum programState // Definition af states i state machine
 {
   startMotor,
   stopMotor,
@@ -21,25 +21,25 @@ enum programState
 
 void programStateSwitch(programState &state);
 
-pthread_t *PIDThread;
-pthread_t *PIDMThread;
-pthread_t *QrThread;
+pthread_t *PIDThread; // PID traad 
+pthread_t *PIDMThread; // Measurement traad
+pthread_t *QrThread; // QR traad
 
-somo *       s1    = new somo();
-Measurement *mInfo = new Measurement();
-PID *        p1    = new PID(mInfo);
-PIDInfo *    pInfo = new PIDInfo();
-Motor *      m1    = new Motor(p1);
-QrCode        q1        = QrCode();
-handDetector *h1 = new handDetector();
+somo *       s1    = new somo(); // Somo objekt
+Measurement *mInfo = new Measurement(); //Measurement objekt
+PID *        p1    = new PID(mInfo); // PID objekt der faar Measurement objekt ind
+PIDInfo *    pInfo = new PIDInfo(); // PID objekt der indeholder PID data
+Motor *      m1    = new Motor(p1); // Motor objekt der faar PID objekt ind
+QrCode        q1        = QrCode(); // QR scanner objekt
+handDetector *h1 = new handDetector(); // Hand Detector objekt
 
-string        tableNo   = "1";
-int           direction = forward;
-BossBoundary *boss      = new BossBoundary();
+string        tableNo   = "1"; // init af bord
+int           direction = forward; // init af retning
+BossBoundary *boss      = new BossBoundary(); //Boss boundary objekt
 
 int main()
 {
-  programState state = receiveOrder;
+  programState state = receiveOrder; // start state
 
   // Initialization and prep for loop
   s1->initSomo();
@@ -59,17 +59,17 @@ int main()
   pthread_create(QrThread, NULL, QrCode_thread, (void*)boss.tableNo);
   for (;;)
   {
-    programStateSwitch(state);
+    programStateSwitch(state); // funktion der koerer states i for-loop
   }
 }
-
+// Funktion der indeholder state machine
 void programStateSwitch(programState &state)
 {
   switch (state)
   {
   case receiveOrder:
   {
-    tableNo   = boss->receive();
+    tableNo   = boss->receive(); // Modtager bord nr, der skal leveres til
     direction = forward;
     state     = startMotor;
   }
@@ -78,15 +78,15 @@ void programStateSwitch(programState &state)
   case startMotor:
   {
     m1->startMotor(direction);
-    pInfo->calcFlag = 1;
+    pInfo->calcFlag = 1;// Saetter flag til PID og measurement maaling og udregning til start
     state           = detectQRCode;
   }
   break;
 
   case stopMotor:
   {
-    m1->stopMotor(direction);
-    pInfo->calcFlag = 0;
+    m1->stopMotor(direction); // Starter motor i rigtig retning
+    pInfo->calcFlag = 0; // Saetter flag til PID og measurement maaling og udregning til stop
     if (direction = forward)
       state = deliverOrder;
     else
@@ -96,16 +96,16 @@ void programStateSwitch(programState &state)
 
   case detectQRCode:
   {
-    QrCode_thread();
+    QrCode_thread(); //Laeser QR kode
     state = stopMotor;
   }
   break;
 
   case detectHand:
   {
-    h1->detectHand();
+    h1->detectHand(); // Detekterer haand
     direction = backward;
-    tableNo   = "0";
+    tableNo   = "0"; // Saetter bord til start position
     state     = startMotor;
   }
   break;

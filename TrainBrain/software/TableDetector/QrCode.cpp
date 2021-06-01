@@ -7,7 +7,7 @@ using namespace zbar;
 ImageScanner scanner;
 raspicam::RaspiCam_Cv Camera;
 
-string QrCode_thread(void *arg)
+string QrCode_thread(void *arg) // Funktion til at koere QR scanner
 {
   string *tableNo = (string *)arg;
   string data;

@@ -2,8 +2,8 @@
 
 PID::PID(Measurement* MP) 
 {
-  pInfo = PIDInfo();
-  pInfo.setMeasurement(MP);
+  pInfo = PIDInfo(); // PID objekt der indeholder data
+  pInfo.setMeasurement(MP); //Saetter measurement ud fra Measurement klassens målinger
   // Clear controller variables
   pInfo.integrator      = 0.0f;
   pInfo.prevError       = 0.0f;
@@ -12,11 +12,11 @@ PID::PID(Measurement* MP)
   pInfo.out             = 0.0f;
 };
 
-float PID::getOut() { return pInfo.out; };
+float PID::getOut() { return pInfo.out; }; // Returnerer outputtet af PID
 
-PIDInfo *PID::getInfo() { return &pInfo; }
+PIDInfo *PID::getInfo() { return &pInfo; } // Returnerer PID objektet
 
-void *PIDController_Update_thread(void *param)
+void *PIDController_Update_thread(void *param) // PID udregner funktion
 {
   // Get parameter
   PIDInfo *pInfo = (PIDInfo *)param;
@@ -25,7 +25,7 @@ void *PIDController_Update_thread(void *param)
     if (pInfo->calcFlag)
     {
 
-      float error = pInfo->setpoint - pInfo->getMeasurement();
+      float error = pInfo->setpoint - pInfo->getMeasurement(); // Den oenskede vaerdi minus den maalte
 
       // Proportional
       float proportional = pInfo->Kp * error;
@@ -73,7 +73,7 @@ void *PIDController_Update_thread(void *param)
   return (void *)pInfo;
 };
 
-void PID::setSetPoint(float setPoint)
+void PID::setSetPoint(float setPoint) //saetter vores setpoint
 {
   pInfo.setpoint = setPoint;
 };

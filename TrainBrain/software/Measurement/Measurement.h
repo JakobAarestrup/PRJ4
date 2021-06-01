@@ -8,7 +8,7 @@
 
 static uint32_t rise_tick;   // Pulse rise time tick value
 static uint32_t pulse_width; // Last measured pulse width (us)
-static uint32_t rpm;
+static uint32_t rpm;         // Calculated RPM
 
 struct PIDM
 {
